@@ -1,0 +1,39 @@
+using System;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        using (var context = new MyDbContext())
+        {
+            // Inserting data
+            var newEmployee = new Employee { Name = "John Doe", Department = "IT" };
+            context.Employees.Add(newEmployee);
+            context.SaveChanges();
+
+            // Retrieving data
+            var employees = context.Employees.ToList();
+            foreach (var emp in employees)
+            {
+                Console.WriteLine($"ID: {emp.Id}, Name: {emp.Name}, Department: {emp.Department}");
+            }
+
+            // Updating data
+            var employeeToUpdate = context.Employees.FirstOrDefault(e => e.Name == "John Doe");
+            if (employeeToUpdate != null)
+            {
+                employeeToUpdate.Department = "HR";
+                context.SaveChanges();
+            }
+
+            // Deleting data
+            var employeeToDelete = context.Employees.FirstOrDefault(e => e.Name == "John Doe");
+            if (employeeToDelete != null)
+            {
+                context.Employees.Remove(employeeToDelete);
+                context.SaveChanges();
+            }
+        }
+    }
+}
